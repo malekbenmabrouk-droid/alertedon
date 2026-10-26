@@ -1,0 +1,26 @@
+@startuml cas-utilisation
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Donneur" as Donneur
+actor "Agent du centre\nde transfusion" as Agent
+actor "Service de notification\n(SMS / e-mail)" as Notif <<système externe>>
+
+rectangle "AlerteDon" {
+  usecase "UC1\nS'inscrire comme donneur" as UC1
+  usecase "UC2\nDéclarer un besoin urgent" as UC2
+  usecase "UC3\nAlerter les donneurs ciblés\n<<UC à risque>>" as UC3
+  usecase "UC4\nRépondre à une alerte" as UC4
+  usecase "UC5\nEnregistrer un don" as UC5
+  usecase "UC6\nSuivre les besoins" as UC6
+}
+
+Donneur --> UC1
+Donneur --> UC4
+Agent --> UC2
+Agent --> UC5
+Agent --> UC6
+
+UC2 ..> UC3 : <<include>>
+UC3 --> Notif
+@enduml
