@@ -1,0 +1,130 @@
+/*
+ * AlerteDon design tokens.
+ * Warm neutrals carry the interface; wine and blood red are reserved for
+ * meaning: blood data, urgency and the single primary action of a view.
+ */
+:root {
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Instrument Sans Variable", "Segoe UI", system-ui, sans-serif;
+
+  /* Type scale (1.2 minor third, display steps hand-tuned) */
+  --t-11: 0.6875rem;
+  --t-12: 0.75rem;
+  --t-13: 0.8125rem;
+  --t-14: 0.875rem;
+  --t-15: 0.9375rem;
+  --t-17: 1.0625rem;
+  --t-20: 1.25rem;
+  --t-24: 1.5rem;
+  --t-32: 2rem;
+  --t-44: 2.75rem;
+  --t-60: 3.75rem;
+  --t-88: 5.5rem;
+
+  /* 4px spacing grid */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+
+  --r-1: 3px;
+  --r-2: 6px;
+  --r-3: 10px;
+  --r-pill: 999px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease: cubic-bezier(0.3, 0.7, 0.2, 1);
+  --d-1: 120ms;
+  --d-2: 220ms;
+  --d-3: 480ms;
+  --d-4: 900ms;
+
+  --page-max: 1240px;
+  --masthead-h: 64px;
+
+  /* Light — ivory and nude */
+  --bg: #fbf7f1;
+  --paper: #fffdf9;
+  --nude-50: #f6eee5;
+  --nude-100: #efe3d6;
+  --nude-200: #e4d4c2;
+  --nude-300: #cfb9a3;
+  --line: #e9dccd;
+  --line-strong: #d7c3ad;
+
+  --ink: #2a1d19;
+  --ink-2: #5d4840;
+  --ink-3: #85706a;
+  --ink-on-color: #fff9f4;
+
+  --wine: #5c1622;
+  --wine-2: #7a2030;
+  --blood: #b01e2f;
+  --blood-hover: #961726;
+  --blush: #f4ddd6;
+  --blush-2: #ead0c8;
+  --blood-ink: #8f1a28;
+
+  --ok: #3f6a4e;
+  --ok-wash: #e4ecdf;
+  --warn: #94581a;
+  --warn-wash: #f6e7d2;
+  --danger: #a51d2c;
+  --danger-wash: #f8e0dc;
+
+  --focus: #7a2030;
+  --shadow-sheet: -24px 0 60px rgb(60 30 20 / 0.12);
+  --shadow-float: 0 18px 48px rgb(60 30 20 / 0.14), 0 2px 6px rgb(60 30 20 / 0.06);
+  --scrim: rgb(42 29 25 / 0.36);
+
+  --map-land: #f0e4d6;
+  --map-coast: #d4bea6;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #171112;
+  --paper: #1f1718;
+  --nude-50: #261d1d;
+  --nude-100: #2e2423;
+  --nude-200: #3b2f2d;
+  --nude-300: #57463f;
+  --line: #33282a;
+  --line-strong: #4a3b39;
+
+  --ink: #f4ebe4;
+  --ink-2: #d2c2b8;
+  --ink-3: #a3918a;
+  --ink-on-color: #fff9f4;
+
+  --wine: #f0a2a8;
+  --wine-2: #e98a92;
+  --blood: #d8404f;
+  --blood-hover: #e65766;
+  --blush: #3a2225;
+  --blush-2: #4a2a2e;
+  --blood-ink: #f2a7ad;
+
+  --ok: #8fc29d;
+  --ok-wash: #1f2c22;
+  --warn: #e0a95d;
+  --warn-wash: #33261a;
+  --danger: #f08b8f;
+  --danger-wash: #3c1d20;
+
+  --focus: #f0a2a8;
+  --shadow-sheet: -24px 0 60px rgb(0 0 0 / 0.45);
+  --shadow-float: 0 18px 48px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.4);
+  --scrim: rgb(0 0 0 / 0.55);
+
+  --map-land: #2a2020;
+  --map-coast: #4a3a36;
+  color-scheme: dark;
+}

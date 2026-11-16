@@ -1,0 +1,271 @@
+/* ---------- Masthead ---------- */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: saturate(1.3) blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.masthead-inner {
+  max-width: var(--page-max);
+  height: var(--masthead-h);
+  margin: 0 auto;
+  padding: 0 var(--s-8);
+  display: flex;
+  align-items: center;
+  gap: var(--s-8);
+}
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.wordmark-name {
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  font-variation-settings: "SOFT" 100, "opsz" 36;
+  color: var(--ink);
+}
+.wordmark-name em {
+  font-style: normal;
+  color: var(--blood);
+}
+.mainnav {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-1);
+  height: 100%;
+}
+.mainnav a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--s-3);
+  font-size: var(--t-14);
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color var(--d-1) var(--ease);
+}
+.mainnav a::after {
+  content: "";
+  position: absolute;
+  left: var(--s-3);
+  right: var(--s-3);
+  bottom: -1px;
+  height: 2px;
+  background: var(--blood);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-2) var(--ease-out);
+}
+.mainnav a:hover {
+  color: var(--ink);
+}
+.mainnav a[aria-current="page"] {
+  color: var(--ink);
+}
+.mainnav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+.masthead-tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* ---------- Page ---------- */
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--s-12) var(--s-8) var(--s-20);
+}
+.page > * + * {
+  margin-top: var(--s-12);
+}
+.page-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--s-6) var(--s-10);
+}
+.page-intro h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-44);
+  font-weight: 420;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  font-variation-settings: "SOFT" 60, "opsz" 72;
+  margin-top: var(--s-2);
+}
+.page-intro h1 em {
+  font-style: italic;
+  color: var(--wine);
+}
+.page-intro p.lede {
+  margin-top: var(--s-3);
+  max-width: 58ch;
+  font-size: var(--t-17);
+  color: var(--ink-2);
+}
+.page-intro .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  justify-content: flex-end;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-bottom: var(--s-3);
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--ink);
+}
+.section-head h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-24);
+  font-weight: 450;
+  letter-spacing: -0.015em;
+  font-variation-settings: "SOFT" 60, "opsz" 36;
+}
+.section-head .aside {
+  font-size: var(--t-13);
+  color: var(--ink-3);
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--s-10) var(--s-10);
+  align-items: start;
+}
+.span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; }
+.span-7 { grid-column: span 7; }
+.span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+
+/* ---------- Mobile tab bar ---------- */
+.tabbar {
+  display: none;
+}
+
+@media (max-width: 1080px) {
+  .masthead-inner,
+  .page {
+    padding-inline: var(--s-6);
+  }
+  .cols {
+    gap: var(--s-8);
+  }
+  .span-4, .span-5, .span-7, .span-8 { grid-column: span 12; }
+  .md-hide { display: none !important; }
+}
+
+@media (max-width: 760px) {
+  :root { --masthead-h: 56px; }
+  .mainnav { display: none; }
+  .masthead-inner { gap: var(--s-3); padding-inline: var(--s-4); }
+  .page {
+    padding: var(--s-8) var(--s-4) calc(var(--s-20) + 24px);
+  }
+  .page > * + * {
+    margin-top: var(--s-10);
+  }
+  .page-intro {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .page-intro h1 { font-size: var(--t-32); }
+  .page-intro .actions { justify-content: flex-start; }
+  .sm-hide { display: none !important; }
+  .tabbar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+  }
+  .tabbar a {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 6px 2px;
+    border-radius: var(--r-2);
+    font-size: var(--t-11);
+    font-weight: 500;
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+  .tabbar a[aria-current="page"] {
+    color: var(--blood);
+  }
+}
+
+.offline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 6px var(--s-4);
+  background: var(--ink);
+  color: var(--bg);
+  font-size: var(--t-12);
+  font-weight: 500;
+}
+
+/* ---------- Space switch (one per actor of the use-case diagram) ---------- */
+.space-switch {
+  display: inline-flex;
+  flex-shrink: 0;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--nude-100);
+}
+.space-switch a {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-pill);
+  font-size: var(--t-13);
+  font-weight: 560;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--d-1) var(--ease), color var(--d-1) var(--ease);
+}
+.space-switch a:hover {
+  color: var(--ink);
+}
+.space-switch a.active {
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 1px 2px rgb(60 30 20 / 0.12);
+}
+.space-switch a.active:last-child {
+  background: var(--blood);
+  color: var(--ink-on-color);
+}
+@media (max-width: 1180px) {
+  .mainnav a { padding: 0 var(--s-2); }
+  .masthead-inner { gap: var(--s-5); }
+}
+@media (max-width: 980px) {
+  .space-switch a { padding: 0 var(--s-3); }
+}
+@media (max-width: 760px) {
+  .space-switch { display: none; }
+}
