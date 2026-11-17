@@ -63,37 +63,15 @@ Pour voir le test fondateur de l'élaboration :
 
 ## 3. Milestones, tickets et tableau de bord
 
-```bash
-bash scripts/github_setup.sh
-```
+Déjà en place sur GitHub (fait depuis l'interface web) :
 
-Le script crée les 4 milestones (Lancement, Élaboration, Construction, Transition), les étiquettes `uc`, `risque` et `revue`, et un ticket par UC ainsi qu'un ticket pour la revue croisée. Il ne recrée rien qui existe déjà, tu peux donc le relancer sans risque.
+- **Milestones** : Lancement, Élaboration, Construction (fermés) et Transition (ouvert jusqu'à la revue).
+- **Tickets** : #1 Lancement, #2 à #7 pour UC1 à UC6 (fermés, chacun avec le commit qui l'implémente), #8 Revue croisée (ouvert).
+- **Tableau de bord** : projet GitHub « AlerteDon » (vue Board) — #1 à #7 dans Done, #8 dans Todo.
 
-> Si tu as déjà créé des tickets UC à la main avec d'autres titres, supprime-les ou renomme-les avant, sinon tu auras des doublons.
-
-**Tableau de bord** (GitHub Projects) :
-
-```bash
-gh project create --owner malekbenmabrouk-droid --title "AlerteDon"
-# note le numéro N affiché, puis ajoute chaque ticket :
-gh issue list --state all --json url --jq '.[].url' | xargs -n1 gh project item-add N --owner malekbenmabrouk-droid --url
-```
-
-Dans l'interface web, ajoute la vue **Board** avec les colonnes « Todo », « In Progress » et « Done ».
-
-**Fermer ce qui est terminé.** UC1 à UC6 sont implémentés. Remplace les numéros par les vrais :
-
-```bash
-gh issue list --state open                       # repère les numéros
-gh issue close <n°UC1> <n°UC2> <n°UC3> <n°UC4> <n°UC5> <n°UC6> --comment "Implémenté et testé, voir la branche UC et le tag"
-gh api repos/malekbenmabrouk-droid/alertedon/milestones --jq '.[] | "\(.number) \(.title)"'
-gh api -X PATCH repos/malekbenmabrouk-droid/alertedon/milestones/<n°> -f state=closed   # Lancement, Élaboration, Construction
-```
-
-Laisse **Transition** ouvert jusqu'à la revue croisée.
+> Attention : dans le tableau de bord, déplacer un ticket dans **Done** le ferme automatiquement.
 
 ---
-
 ## 4. Revue croisée puis livraison v1.0
 
 1. Donne à l'autre équipe le lien du dépôt et la grille `docs/revue-croisee.md`. La revue porte sur le tag `v0.9-construction`.
