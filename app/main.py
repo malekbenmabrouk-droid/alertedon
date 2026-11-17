@@ -8,7 +8,7 @@ from app.api import sante, donneurs, centres, besoins, alertes, reponses, dons, 
 from app.database import Base, moteur
 from app.services.erreurs import Conflit, ErreurMetier, RegleMetierViolee, RessourceIntrouvable
 
-VERSION = "0.9.0"
+VERSION = "1.0.0"
 ROUTEURS = [sante, donneurs, centres, besoins, alertes, reponses, dons, suivi]
 
 _CODES = {RessourceIntrouvable: 404, Conflit: 409, RegleMetierViolee: 422}

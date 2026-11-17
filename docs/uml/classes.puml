@@ -1,6 +1,7 @@
 @startuml classes
 title AlerteDon — Diagramme de classes (architecture en couches)
 skinparam classAttributeIconSize 0
+skinparam dpi 150
 skinparam packageStyle rectangle
 hide empty members
 
