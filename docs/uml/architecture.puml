@@ -1,0 +1,32 @@
+@startuml architecture
+title AlerteDon — Architecture de base (élaboration)
+skinparam componentStyle rectangle
+actor Donneur
+actor "Agent" as Agent
+node "API AlerteDon (FastAPI)" {
+  [Contrôleurs\napp.api] as API
+  [Services métier\napp.services] as SRV
+  [Règles de ciblage\napp.domain.regles] as RG
+  [Entités\napp.domain] as ENT
+  [Repositories\napp.repositories] as REP
+  interface NotificationGateway as NG
+  [Mock / Log\n(élaboration)] as MOCK
+  [E-mail SMTP\n(itération 3)] as MAIL
+}
+database "SQLite / SGBD" as DB
+cloud "Service de notification\n(SMS / e-mail)" as EXT
+node "GitHub Actions (CI)" as CI
+
+Donneur --> API : HTTP/JSON
+Agent --> API : HTTP/JSON
+API --> SRV
+SRV --> RG
+SRV --> REP
+REP --> ENT
+REP --> DB : SQLAlchemy
+SRV --> NG
+NG <|.. MOCK
+NG <|.. MAIL
+MAIL --> EXT
+CI ..> API : pytest à chaque push
+@enduml
