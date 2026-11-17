@@ -1,0 +1,20 @@
+@startuml sequence-uc6
+title UC6 — Suivre les besoins
+autonumber
+actor "Agent du centre" as Agent
+participant ":SuiviController" as C
+participant ":SuiviService" as S
+participant ":BesoinRepository" as BR
+participant ":AlerteRepository" as AR
+participant ":DonRepository" as DoR
+
+Agent -> C : GET /suivi/besoins?statut=OUVERT
+C -> S : lister(statut)
+S -> BR : lister(statut)
+loop pour chaque besoin
+  S -> AR : du_besoin(id)
+  S -> DoR : nombre_pour_besoin(id)
+  S -> S : calculer alertes, réponses,\ntaux de réponse, progression
+end
+C --> Agent : 200 [SuiviBesoin...]
+@enduml
