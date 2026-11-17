@@ -1,0 +1,44 @@
+@startuml sequence-uc3
+title UC3 — Alerter les donneurs ciblés (UC à risque)
+autonumber
+participant ":AlertesController\nou :BesoinService" as C
+participant ":AlerteService" as S
+participant "regles" as R
+participant ":DonneurRepository" as DR
+participant ":AlerteRepository" as AR
+participant "<<interface>>\n:NotificationGateway" as N
+actor "Service de notification\n(SMS / e-mail)" as Ext
+database "BD" as DB
+
+C -> S : alerter_donneurs(besoinId)
+S -> S : vérifier besoin existant et OUVERT
+S -> R : groupes_compatibles(besoin.groupe)
+R --> S : ex. A+ → {O-, O+, A-, A+}
+S -> DR : actifs_des_groupes(groupes)
+DR -> DB : SELECT donneurs
+DR --> S : candidats
+loop pour chaque candidat
+  S -> R : distance_km(donneur, centre) ≤ rayon ?
+  S -> R : est_eligible(dernier don, délai 56 j) ?
+  S -> AR : derniere_alerte_hors_besoin(donneur)
+  S -> R : alerte_recente(…, 7 j) ?
+  note right of S : sinon → exclu\n(hors_zone / non_eligible / alerte_recente)
+end
+loop pour chaque donneur retenu
+  S -> AR : pour_besoin_et_donneur(b, d)
+  alt alerte déjà existante (idempotence)
+    S -> S : deja_alertes++
+  else nouvelle alerte
+    S -> AR : ajouter(Alerte A_ENVOYER)
+    S -> N : envoyer(Message)
+    N -> Ext : SMS / e-mail
+    alt succès
+      S -> S : statut = ENVOYEE, envoyee_le = now
+    else EchecNotification
+      S -> S : statut = ECHEC (relance possible,\ntentatives ≤ 3)
+    end
+  end
+end
+S -> DB : COMMIT
+S --> C : RapportAlerte {cibles, envoyees, echecs, exclus}
+@enduml

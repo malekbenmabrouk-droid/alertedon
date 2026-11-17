@@ -1,0 +1,74 @@
+@startuml classes-domaine
+title AlerteDon — Modèle du domaine
+skinparam classAttributeIconSize 0
+hide empty members
+left to right direction
+
+class Centre {
+  id : int
+  nom : str
+  latitude : float
+  longitude : float
+}
+class Besoin {
+  id : int
+  groupe_sanguin : GroupeSanguin
+  quantite : int
+  quantite_collectee : int
+  echeance : date
+  statut : OUVERT | CLOTURE
+  cree_le : datetime
+  cloture_le : datetime
+  + objectif_atteint() : bool
+}
+class Donneur {
+  id : int
+  nom : str
+  groupe_sanguin : GroupeSanguin
+  latitude : float
+  longitude : float
+  date_dernier_don : date
+  canal_prefere : Canal
+  telephone : str
+  email : str
+  actif : bool
+  + contact() : str
+}
+class Alerte {
+  id : int
+  statut : StatutAlerte
+  tentatives : int
+  envoyee_le : datetime
+  repondue_le : datetime
+  creneau : datetime
+}
+class Don {
+  id : int
+  date_don : date
+  volume_ml : int
+}
+enum GroupeSanguin {
+  O- / O+ / A- / A+
+  B- / B+ / AB- / AB+
+}
+enum Canal {
+  SMS
+  EMAIL
+}
+enum StatutAlerte {
+  A_ENVOYER
+  ENVOYEE
+  ECHEC
+  ACCEPTEE
+  DECLINEE
+}
+
+Centre "1" -- "*" Besoin : émet >
+Besoin "1" -- "*" Alerte : déclenche >
+Donneur "1" -- "*" Alerte : reçoit >
+Donneur "1" -- "*" Don : effectue >
+Centre "1" -- "*" Don : collecte >
+Besoin "0..1" -- "*" Don : couvre >
+note "Contrainte d'unicité (besoin, donneur)\n→ idempotence de UC3" as N
+N .. Alerte
+@enduml

@@ -1,0 +1,27 @@
+@startuml sequence-uc1
+title UC1 — S'inscrire comme donneur (scénario nominal)
+autonumber
+actor Donneur
+participant ":DonneursController" as C
+participant ":InscriptionService" as S
+participant ":DonneurRepository" as R
+database "BD" as DB
+
+Donneur -> C : POST /donneurs {nom, groupe, position, canal, contact}
+C -> C : valider le schéma (groupe ∈ ABO/Rh, lat/lon)
+C -> S : inscrire(...)
+S -> S : contrôler canal ↔ contact,\ndate dernier don ≤ aujourd'hui
+S -> R : existe_contact(tel, email)
+R -> DB : SELECT
+R --> S : faux
+S -> R : ajouter(donneur)
+R -> DB : INSERT donneurs
+S -> DB : COMMIT
+S --> C : donneur
+C --> Donneur : 201 Created {id, ...}
+
+alt contact déjà inscrit
+  S --> C : Conflit
+  C --> Donneur : 409
+end
+@enduml

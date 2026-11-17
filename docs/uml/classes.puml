@@ -1,0 +1,183 @@
+@startuml classes
+title AlerteDon — Diagramme de classes (architecture en couches)
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty members
+
+package "Contrôleur (app.api)" {
+  class DonneursController <<router>> {
+    + POST /donneurs
+    + GET /donneurs/{id}
+  }
+  class BesoinsController <<router>> {
+    + POST /besoins
+    + GET /besoins/{id}
+  }
+  class AlertesController <<router>> {
+    + POST /besoins/{id}/alertes
+    + POST /besoins/{id}/alertes/relance
+    + GET /besoins/{id}/alertes
+  }
+  class ReponsesController <<router>> {
+    + POST /alertes/{id}/reponse
+    + GET /donneurs/{id}/alertes
+  }
+  class DonsController <<router>> {
+    + POST /dons
+  }
+  class SuiviController <<router>> {
+    + GET /suivi/besoins
+    + GET /suivi/besoins/{id}
+  }
+}
+
+package "Métier (app.services + app.domain)" {
+  class InscriptionService {
+    + inscrire(...) : Donneur
+  }
+  class BesoinService {
+    + declarer(...) : ResultatDeclaration
+    + obtenir(id) : Besoin
+  }
+  class AlerteService <<UC à risque>> {
+    - cfg : Parametres
+    - horloge
+    + selectionner_donneurs(b : Besoin) : list<Donneur>
+    + alerter_donneurs(besoinId) : RapportAlerte
+    + relancer_echecs(besoinId) : RapportAlerte
+    - _envoyer(a, d, b, rapport)
+  }
+  class ReponseService {
+    + repondre(alerteId, donneurId, accepte, creneau) : Alerte
+    + alertes_du_donneur(id) : list<Alerte>
+  }
+  class DonService {
+    + enregistrer(...) : ResultatDon
+  }
+  class SuiviService {
+    + suivre(besoinId) : SuiviBesoin
+    + lister(statut, centreId) : list<SuiviBesoin>
+  }
+  class Regles <<module>> {
+    + groupes_compatibles(g) : set<str>
+    + est_compatible(gDonneur, gReceveur) : bool
+    + distance_km(lat1, lon1, lat2, lon2) : float
+    + est_eligible(dernierDon, auj, delai) : bool
+    + alerte_recente(derniere, maintenant, delai) : bool
+  }
+  class RapportAlerte {
+    besoin_id : int
+    cibles : int
+    envoyees : int
+    echecs : int
+    deja_alertes : int
+    exclus : dict<str,int>
+  }
+
+  class Donneur <<entity>> {
+    id : int
+    nom : str
+    groupe_sanguin : str
+    latitude : float
+    longitude : float
+    date_dernier_don : date
+    canal_prefere : SMS | EMAIL
+    telephone : str
+    email : str
+    actif : bool
+    + contact() : str
+  }
+  class Centre <<entity>> {
+    id : int
+    nom : str
+    latitude : float
+    longitude : float
+  }
+  class Besoin <<entity>> {
+    id : int
+    groupe_sanguin : str
+    quantite : int
+    quantite_collectee : int
+    echeance : date
+    statut : OUVERT | CLOTURE
+    + objectif_atteint() : bool
+  }
+  class Alerte <<entity>> {
+    id : int
+    statut : A_ENVOYER | ENVOYEE | ECHEC | ACCEPTEE | DECLINEE
+    tentatives : int
+    envoyee_le : datetime
+    repondue_le : datetime
+    creneau : datetime
+  }
+  class Don <<entity>> {
+    id : int
+    date_don : date
+    volume_ml : int
+  }
+}
+
+package "Accès aux données (app.repositories)" {
+  class DonneurRepository
+  class CentreRepository
+  class BesoinRepository
+  class AlerteRepository {
+    + pour_besoin_et_donneur(b, d) : Alerte
+    + derniere_alerte_hors_besoin(d, b) : datetime
+    + en_echec(b, max) : list<Alerte>
+  }
+  class DonRepository
+}
+
+package "Notification (app.notification)" {
+  interface NotificationGateway {
+    + envoyer(m : Message)
+  }
+  class LoggingNotificationGateway
+  class MockNotificationGateway
+  class EmailNotificationGateway
+  class Message {
+    destinataire : str
+    canal : str
+    objet : str
+    texte : str
+  }
+}
+
+Centre "1" <-- "*" Besoin
+Besoin "1" <-- "*" Alerte
+Donneur "1" <-- "*" Alerte
+Donneur "1" <-- "*" Don
+Besoin "0..1" <-- "*" Don
+note bottom of Alerte : unique (besoin, donneur)\n= idempotence
+
+DonneursController ..> InscriptionService
+BesoinsController ..> BesoinService
+AlertesController ..> AlerteService
+ReponsesController ..> ReponseService
+DonsController ..> DonService
+SuiviController ..> SuiviService
+
+BesoinService --> AlerteService : <<include>> UC3
+AlerteService ..> Regles
+DonService ..> Regles
+AlerteService --> NotificationGateway
+AlerteService ..> RapportAlerte
+AlerteService --> DonneurRepository
+AlerteService --> AlerteRepository
+AlerteService --> BesoinRepository
+InscriptionService --> DonneurRepository
+BesoinService --> BesoinRepository
+BesoinService --> CentreRepository
+ReponseService --> AlerteRepository
+DonService --> DonRepository
+DonService --> DonneurRepository
+SuiviService --> AlerteRepository
+SuiviService --> DonRepository
+
+NotificationGateway <|.. LoggingNotificationGateway
+NotificationGateway <|.. MockNotificationGateway
+NotificationGateway <|.. EmailNotificationGateway
+EmailNotificationGateway o--> NotificationGateway : repli SMS
+NotificationGateway ..> Message
+@enduml
