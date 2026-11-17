@@ -1,0 +1,26 @@
+@startuml sequence-uc4
+title UC4 — Répondre à une alerte
+autonumber
+actor Donneur
+participant ":ReponsesController" as C
+participant ":ReponseService" as S
+participant ":AlerteRepository" as AR
+database "BD" as DB
+
+Donneur -> C : GET /donneurs/{id}/alertes
+C -> S : alertes_du_donneur(id)
+S -> AR : du_donneur(id)
+C --> Donneur : liste des alertes
+Donneur -> C : POST /alertes/{id}/reponse {accepte, créneau}
+C -> S : repondre(alerteId, donneurId, accepte, créneau)
+S -> AR : par_id(alerteId)
+S -> S : alerte destinée au donneur ?\nstatut = ENVOYEE ? besoin OUVERT ?
+alt accepte
+  S -> S : maintenant ≤ créneau ≤ échéance
+  S -> S : statut = ACCEPTEE
+else décline
+  S -> S : statut = DECLINEE
+end
+S -> DB : COMMIT
+C --> Donneur : 200 {alerte}
+@enduml
