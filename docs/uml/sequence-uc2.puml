@@ -1,0 +1,25 @@
+@startuml sequence-uc2
+title UC2 — Déclarer un besoin urgent (<<include>> UC3)
+autonumber
+actor "Agent du centre" as Agent
+participant ":BesoinsController" as C
+participant ":BesoinService" as S
+participant ":CentreRepository" as CR
+participant ":BesoinRepository" as BR
+participant ":AlerteService" as A
+database "BD" as DB
+
+Agent -> C : POST /besoins {centre, groupe, quantité, échéance}
+C -> S : declarer(...)
+S -> CR : par_id(centre)
+CR --> S : centre
+S -> S : contrôler quantité (1..50),\néchéance ≥ aujourd'hui
+S -> BR : ajouter(besoin OUVERT)
+BR -> DB : INSERT besoins
+S -> DB : COMMIT
+S -> A : alerter_donneurs(besoin.id)
+ref over A : UC3 — Alerter les donneurs ciblés
+A --> S : rapport
+S --> C : ResultatDeclaration(besoin, rapport)
+C --> Agent : 201 {besoin, alerte}
+@enduml
