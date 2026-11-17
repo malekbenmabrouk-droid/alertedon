@@ -1,0 +1,31 @@
+@startuml sequence-uc5
+title UC5 — Enregistrer un don
+autonumber
+actor "Agent du centre" as Agent
+participant ":DonsController" as C
+participant ":DonService" as S
+participant "regles" as R
+participant ":DonneurRepository" as DR
+participant ":BesoinRepository" as BR
+participant ":DonRepository" as DoR
+database "BD" as DB
+
+Agent -> C : POST /dons {donneur, centre, date, besoin?}
+C -> S : enregistrer(...)
+S -> DR : par_id(donneur)
+S -> R : est_eligible(dernier don, date du don, 56 j)
+opt don rattaché à un besoin
+  S -> BR : par_id(besoin)
+  S -> R : est_compatible(groupe donneur, groupe besoin)
+end
+S -> DoR : ajouter(don)
+S -> S : donneur.date_dernier_don = date du don
+opt besoin
+  S -> S : quantite_collectee++
+  alt objectif atteint
+    S -> S : statut = CLOTURE
+  end
+end
+S -> DB : COMMIT
+C --> Agent : 201 {don, besoin}
+@enduml
