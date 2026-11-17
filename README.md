@@ -1,6 +1,6 @@
 # AlerteDon — Système d'alerte ciblée des donneurs de sang
 
-TP1 « Processus unifié et Approches Agiles » (Hajer Taktak), INSAT.
+TP1 « Processus unifié et Approches Agiles »
 
 Quand un centre de transfusion manque d'un groupe sanguin, AlerteDon alerte **uniquement** les donneurs
 compatibles (ABO/Rh), proches du centre et éligibles (délai depuis le dernier don respecté).
