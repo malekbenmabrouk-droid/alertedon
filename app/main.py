@@ -4,12 +4,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.api import sante, donneurs, centres, besoins
+from app.api import sante, donneurs, centres, besoins, alertes
 from app.database import Base, moteur
 from app.services.erreurs import Conflit, ErreurMetier, RegleMetierViolee, RessourceIntrouvable
 
 VERSION = "0.1.0"
-ROUTEURS = [sante, donneurs, centres, besoins]
+ROUTEURS = [sante, donneurs, centres, besoins, alertes]
 
 _CODES = {RessourceIntrouvable: 404, Conflit: 409, RegleMetierViolee: 422}
 
